@@ -141,6 +141,8 @@
                         						
                         <entry excluding="googletest-release-1.8.1|ut|gtest|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
                         						
+                        <entry excluding="gtest.cc|gtest-typed-test.cc|gtest-test-part.cc|gtest-printers.cc|gtest-port.cc|gtest-filepath.cc|gtest-death-test.cc|gtest-all.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="googletest-release-1.8.1/googletest/src"/>
+                        						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="gtest"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
@@ -252,6 +254,8 @@
                     <sourceEntries>
                         						
                         <entry excluding="googletest-release-1.8.1|ut|gtest|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+                        						
+                        <entry excluding="gtest.cc|gtest-typed-test.cc|gtest-test-part.cc|gtest-printers.cc|gtest-port.cc|gtest-filepath.cc|gtest-death-test.cc|gtest-all.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="googletest-release-1.8.1/googletest/src"/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="gtest"/>
                         						

@@ -1,3 +1,12 @@
 tst/gtest/*.h
 tst/gtest/*.cc
+tst/fff/fff.h
+tst/googletest-release-1.8.1/*.*
+tst/googletest-release-1.8.1/WORKSPACE
+tst/googletest-release-1.8.1/LICENSE
+tst/googletest-release-1.8.1/ci/
+tst/googletest-release-1.8.1/googlemock/
+tst/googletest-release-1.8.1/googletest/
+
+
 
