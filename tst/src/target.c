@@ -12,9 +12,9 @@
 
 #ifdef UT
 	int UT_function(int a)
-#else
+#else //UT
 int function(int a)
-#endif
+#endif //UT
 {
 	if (a == 0){
 		return 0;
@@ -27,16 +27,17 @@ int function(int a)
 
 #ifdef UT
 	int UT_functionA(int a)
-#else
+#else //UT
 int functionA(int a)
-#endif
+#endif //UT
 {
 	int ret;
 	int b;
+	unsigned int tmp[][3]={{0,1,0},{2,3,2},{4,5,4}};
 	T_STRUCT s;
 	ret = functionAsub(a,&b);
 	if( ret == 1 ){
-		functionC(b,&s);
+		functionC(b,&s,0,tmp);
 		return s.hight;
 	}
 	else{
@@ -46,9 +47,9 @@ int functionA(int a)
 
 #ifdef UT
 	int UT_functionAsub(int a,int *b)
-#else
+#else //UT
 int functionAsub(int a,int *b)
-#endif
+#endif //UT
 {
 	int ret;
 	if(a > 0)
@@ -63,15 +64,18 @@ int functionAsub(int a,int *b)
 
 }
 
+
+
+
 #ifdef UT
-	void UT_functionC(int a, T_STRUCT *s)
-#else
-void functionC(int a, T_STRUCT *s)
-#endif
+	void UT_functionC(int a, T_STRUCT *s,unsigned long b,unsigned int abc[3][3])
+#else //UT
+void functionC(int a, T_STRUCT *s,unsigned long b,unsigned int abc[3][3])
+#endif //UT
 {
 	s->hight = (0xFF00 & a)>>8;
 	s->low   = (0xFF   & a);
+	int *x;
+	otameshi(&x);
 }
-
-
 

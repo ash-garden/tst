@@ -1,0 +1,2 @@
+cd tst
+python googletest-release-1.8.1/googletest/scripts/fuse_gtest_files.py ./

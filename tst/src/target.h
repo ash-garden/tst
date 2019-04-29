@@ -18,6 +18,7 @@ typedef struct{
 extern int function(int a);
 extern int functionA(int a);
 extern int functionAsub(int a,int *b);
-extern void functionC(int a, T_STRUCT *s);
+extern void functionC(int a, T_STRUCT *s,unsigned long b,unsigned int *);
+extern	void otameshi( int* *a);
 
 #endif /* TARGET_H_ */
