@@ -1,3 +1,8 @@
 /Debug/
 /ut/*.back
 /ut/*.back*
+/ut/*.pdf
+/ut/*.html
+/ut/.vscode/*
+
+

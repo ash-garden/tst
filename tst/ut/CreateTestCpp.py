@@ -25,6 +25,7 @@ extern "C" {
 DEFINE_FFF_GLOBALS;
 }
 
+//TEST START
 """
 
 HFileHeader = """
@@ -53,6 +54,11 @@ protected:
 	virtual void TearDown(){
 	}
 };
+
+// Custom Fake 
+
+
+// Test Case
 #if 0
 TEST_F(TARGETNAME, functionC_1 )
 {

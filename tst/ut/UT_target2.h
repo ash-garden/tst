@@ -21,17 +21,20 @@ protected:
 	virtual void TearDown(){
 	}
 };
+// Custom Fake 
 
+
+// Test Case
 TEST_F(TARGETNAME, otameshi_1 )
 {
-// 名前
-	TEST_CASE_NAME( xxx );
-// 手順
+// Test Name
+	TEST_CASE_NAME( "xxx" );
+// Test Action
 	int* tmp;
 
 	otameshi(&tmp);
 
-	// 規格
+// Expected Result
 
 
 }

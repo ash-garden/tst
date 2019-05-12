@@ -15,5 +15,6 @@ extern "C" {
 DEFINE_FFF_GLOBALS;
 }
 
+//TEST START
 #include "UT_target.h"
 #include "UT_target2.h"

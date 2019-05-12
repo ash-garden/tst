@@ -11,7 +11,9 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "./../src/"
+                "-r./../Debug/result.txt",
+                "-t中井",
+                "-d2019/5/12"
             ]
         }
     ]

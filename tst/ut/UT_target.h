@@ -22,16 +22,22 @@ protected:
 	}
 };
 
+// Custom Fake 
+void custmfunctionC(int cc , T_STRUCT* ss,unsigned long b,unsigned int *){
+	ss->hight = 0xAB;
+}
+
+// Test Case
 TEST_F(TARGETNAME, functionC_1 )
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME( "" );
-// 手順
+// Test Action
 	T_STRUCT st;
 
 	UT_functionC(0x12345678,&st,0,NULL);
 
-// 規格
+// Expected Result
 	EXPECT_EQ(st.hight,0x56);
 	EXPECT_EQ(st.low  ,0x78);
 
@@ -39,41 +45,39 @@ TEST_F(TARGETNAME, functionC_1 )
 
 TEST_F(TARGETNAME, functionAsub_1)
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME("a>0");
-// 手順
+// Test Action
 	int b;
 	int ret;
 	ret = UT_functionAsub(1,&b);
-// 規格
+// Expected Result
 	EXPECT_EQ(0,ret);
 	EXPECT_EQ(0x5678,b);
 }
 
 TEST_F(TARGETNAME, functionAsub_2 )
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME( "a<=0" );
-// 手順
+// Test Action
 	int a;
 	int b;
 	int ret;
 	a = 0;
 	ret = UT_functionAsub(a,&b);
 
-// 規格
+// Expected Result
 	EXPECT_EQ(ret,1);
 	EXPECT_EQ(b,0x1234);
 
 }
-void custmfunctionC(int cc , T_STRUCT* ss,unsigned long b,unsigned int *){
-	ss->hight = 0xAB;
-}
+
 TEST_F(TARGETNAME, functionA_1 )
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME( "functionAsub の戻り値が1" );
-// 手順
+// Test Action
 	int a;
 	int ret;
 	a = 0;
@@ -83,7 +87,7 @@ TEST_F(TARGETNAME, functionA_1 )
 
 	ret = UT_functionA(a);
 
-// 規格
+// Expected Result
 	EXPECT_EQ(a,functionAsub_fake.arg0_val);
 	EXPECT_EQ(*((int*)(functionAsub_fake.arg1_val)),functionC_fake.arg0_val);
 	EXPECT_EQ(ret,0xAB);
@@ -92,16 +96,16 @@ TEST_F(TARGETNAME, functionA_1 )
 
 TEST_F(TARGETNAME, functionA_2 )
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME( "functionAsubの戻り値が0以外" );
-// 手順
+// Test Action
 	int ret;
 	int a;
 	a=1;
 	functionAsub_fake.return_val = 0;
 	ret = UT_functionA(a);
 
-// 規格
+// Expected Result
 	EXPECT_EQ(functionAsub_fake.arg0_val,a);
 	EXPECT_EQ(ret,0);
 
@@ -109,9 +113,9 @@ TEST_F(TARGETNAME, functionA_2 )
 
 TEST_F(TARGETNAME, functionA_3 )
 {
-// 名前
+// Test Name
 	TEST_CASE_NAME( "functionAsubの戻り値が0以外" );
-// 手順
+// Test Action
 	int ret;
 	int a;
 	a=1;
@@ -119,7 +123,7 @@ TEST_F(TARGETNAME, functionA_3 )
 	functionAsub_fake.return_val = 0;
 	ret = UT_functionA(a);
 
-// 規格
+// Expected Result
 	EXPECT_EQ(functionAsub_fake.arg0_val,a);
 	EXPECT_EQ(ret,0);
 
