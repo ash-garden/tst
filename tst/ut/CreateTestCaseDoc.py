@@ -48,7 +48,7 @@ class TestCase :
         
         self.ExpectedResult = exprslt.replace("\n","<br>")
     
-    def AddActualResult(self, testResult, tester,testdate):
+    def AddActualResult(self, testResult, tester,testdate,jp):
         if len(testResult) != 0 :
             name ,ext = os.path.splitext(self.targetFile)
             # ptn_OK = r"^[\[]\s*OK\s*[\]]\s*"+ name + r"[_cChH]*[.]"+self.Title
@@ -59,7 +59,11 @@ class TestCase :
 
             result = ptn_OK.search( testResult )
             if result :
-                self.ActualResult = "Same as the Left."
+                if jp is True:
+                    self.ActualResult = "同左"
+                else :
+                    self.ActualResult = "Same as the Left."
+
                 self.Status = testdate + "<br>" + tester + "<br>" + "OK"
                 self.testresult = "OK"
             else:
@@ -69,8 +73,13 @@ class TestCase :
                     self.Status = testdate + "<br>" + tester + "<br>" + "NG"
                     self.testresult = "NG"
         
-    def CreateHeader(self):
-        ret  = "|No.|File|Title|Name|Action|Expected result | Actual result | Status (Pass/Fail) | Note |\n"
+    def CreateHeader(self,jp):
+        if jp is True :
+            ret  = "|No.|File|Title|Name|手順|規格 | 結果 | 合否 | Note |\n"
+
+        else:
+            ret  = "|No.|File|Title|Name|Action|Expected result | Actual result | Status (Pass/Fail) | Note |\n"
+
         ret += "|:--|:---|:----|:---|:-----|:---------------|:--------------|:-------------------|:-----|\n"
         return ret
 
@@ -84,17 +93,19 @@ class TestCaseDoc :
         self.targetCFile = targetCFile
         self.custom_func = ""
         self.testcase = []
-        
-        if( len(resultFile) != 0):
-            f = open(resultFile)
-            self.testresult =  f.read()
-            f.close()
-            self.tester = testername
-            self.testdate = testdate
+        if resultFile is not None:
+            if( len(resultFile) != 0):
+                f = open(resultFile)
+                self.testresult =  f.read()
+                f.close()
+                self.tester = testername
+                self.testdate = testdate
+        else:
+            self.testresult = None
 
     def GetCount(self):
         return len(self.testcase)
-    def Create(self):
+    def Create(self,jp):
         try:
             read_file = open(self.anaFile, 'r')
             for line in read_file:
@@ -132,13 +143,14 @@ class TestCaseDoc :
                 elif tcd_state.TESTEXPRESULT == self.tcd_state:
                     if re.match(ptnTestExpRsltExit,line):
                         self.activeCase.AddExpRslt(self.temp)
-                        self.activeCase.AddActualResult(self.testresult,self.tester,self.testdate)
+                        if self.testresult is not None:
+                            self.activeCase.AddActualResult(self.testresult,self.tester,self.testdate,jp)
                         self.tcd_state = tcd_state.TESTCASE
                         self.testcase.append(self.activeCase)
                     else:
                         self.temp += line
             
-            ret = self.testcase[0].CreateHeader()
+            ret = self.testcase[0].CreateHeader(jp)
             num = 1
             for x in self.testcase:
                 ret += x.Create(num)
@@ -148,13 +160,21 @@ class TestCaseDoc :
             read_file.close()
             return ret
 
-    def GetSummary(self):
-        if len(self.testresult) == 0:
-            testSummary = '''Test target file name   :   {}
-Number of test case     :   {}
+    def GetSummary(self,jp):
+        if jp is True:
+            TestTargetFileName =    "試験対象ファイル名      :"
+            NumberOfTestCase =      "試験項目数              : "
+            NumberOfPassedTestCase ="合格試験項目数          :" 
+            NumberOfFailedTestCaes ="不合格試験項目数        :" 
+        else:
+            TestTargetFileName =    "Test target file name       :"
+            NumberOfTestCase =      "Number of test case         :"
+            NumberOfPassedTestCase = "Number of test case        :"
+            NumberOfFailedTestCaes = "Number of Failed testcaes  :" 
 
-    '''.format(self.targetCFile,len(self.testcase))
-    
+        if self.testresult is None:
+            testSummary = TestTargetFileName + self.targetCFile + "\n"
+            testSummary += NumberOfTestCase  + str( len(self.testcase) )+ "\n"
         else:
             okcases = 0
             ngcases = 0
@@ -164,12 +184,10 @@ Number of test case     :   {}
                 elif (c.testresult == "NG"):
                     ngcases +=1
                 
-
-            testSummary = '''Test target file name      :   {}
-Number of test case        :   {}
-Number of Passed testcase  :   {}
-Number of Failed testcaes  :   {}
-    '''.format(self.targetCFile,len(self.testcase),okcases,ngcases)
+            testSummary = TestTargetFileName + self.targetCFile + "\n"
+            testSummary += NumberOfTestCase  + str( len(self.testcase) )+ "\n"
+            testSummary += NumberOfPassedTestCase + str( okcases ) + "\n"
+            testSummary += NumberOfFailedTestCaes + str( ngcases ) + "\n"
 
         return testSummary.replace("\n","<br>")
 
@@ -182,7 +200,7 @@ class STATE(Enum):
     ELSE =3
 
 
-def CreateTestCaseDoc(resultFile,tester,date):
+def CreateTestCaseDoc(resultFile,tester,date,jp):
     state = STATE.RAW
     read_file = open("./test.cpp", 'r')
     for line in read_file:
@@ -192,20 +210,30 @@ def CreateTestCaseDoc(resultFile,tester,date):
         elif state == STATE.TESTCASE:
             result =  re.match(ptnInclude,line)
             if result :
+                if jp is True :
+                    strSummary = "# 概要"
+                    strDetails = "#詳細"
+                    strCustomFunction = "#カスタム関数"
+                else:
+                    strSummary = "# Summar"
+                    strDetails = "#Details"
+                    strCustomFunction = "#CustomFunction"
+
                 print(line)
                 print (result.group(1))
                 targetFileName = result.group(1)[3:]
                 TCD = TestCaseDoc( "./"+result.group(1)+".h",targetFileName +".c" ,resultFile,tester,date)
-                text = TCD.Create()
+                text = TCD.Create(jp)
 
                 md = markdown.Markdown(extensions=["tables"]) 
                 body2 = md.convert(text) 
-                
-                Summary = "# Summary\n" + TCD.GetSummary()  +"\n#Details\n"
+                Summary = strSummary + "\n" + TCD.GetSummary(jp)  +"\n" + strDetails + "\n"
+
+
                 md1 = markdown.Markdown()
                 body1 = md1.convert(Summary)
 
-                CustFunc = "\n#CustomFunction\n" + TCD.GetCustomFunction()
+                CustFunc = "\n"+strCustomFunction+"\n" + TCD.GetCustomFunction()
                 body3 = md1.convert(CustFunc)
 
 
@@ -242,16 +270,16 @@ h2,h3,h4,h5,h6,p {  font-size: 20%;　}
                     'margin-bottom': '0.75in',
                     'margin-left': '0.75in',
                     'encoding': "UTF-8",
-                    'header-left': '[webpage]',
-                    'header-right': 'Page  [page]  of  [toPage]',
-                    'footer-center': 'Page  [page]  of  [toPage]'
+                    'footer-center': 'Page  [page]  of  [toPage]',
+                    'footer-line':None,
+                    'zoom':'1'
                 }            
                 pdfkit.from_string(html, targetFileName+".pdf",options = options) # --- (*4)
 
 
 
 def parser():
-    usage = 'Usage: python {} [--result TestResultText] [--tester TesterName] [--date TestDate] [--help]'\
+    usage = 'Usage: python {} [--result TestResultText] [--tester TesterName] [--date TestDate] [--japanese] [--help]'\
             .format(__file__)
     argparser = ArgumentParser(usage=usage)
     argparser.add_argument('--result','-r', type=str,
@@ -260,18 +288,20 @@ def parser():
                            help='Tester name(your name)')
     argparser.add_argument('--date','-d', type=str,
                            help='Test Date()')
+    argparser.add_argument('--japanese','-j', action='store_true',
+                           help='Output Lang Japanese')
 
     args = argparser.parse_args()
-    return args.result,args.tester,args.date
+    return args.result,args.tester,args.date,args.japanese
 
 
 if __name__ == '__main__':
-    result,tester,date = parser()
-    if  False == os.path.isfile(result) :
-        print("Input --result is not file. ")
-    
-    else:
-        CreateTestCaseDoc(result,tester,date)
+    result,tester,date,jp = parser()
+    if result is not None:
+        if  False == os.path.isfile(result) :
+            print("Input --result is not file. ")
+            exit()
+    CreateTestCaseDoc(result,tester,date,jp)
     
     
     print(result)
