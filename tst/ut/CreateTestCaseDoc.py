@@ -102,7 +102,7 @@ class TestCaseDoc :
                 self.testdate = testdate
         else:
             self.testresult = None
-
+    
     def GetCount(self):
         return len(self.testcase)
     def Create(self,jp):
